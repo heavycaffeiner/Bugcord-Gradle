@@ -1,13 +1,17 @@
-name: Build & Publish
+name: Release
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    tags: [ "*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,25 +19,29 @@ jobs:
       - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
           java-version: 21
+          distribution: temurin
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-disabled: true
 
-      - name: Build & Publish
-        env:
-          MAVEN_RELEASES_USERNAME: ${{ secrets.MAVEN_RELEASE_USERNAME }}
-          MAVEN_RELEASES_PASSWORD: ${{ secrets.MAVEN_RELEASE_PASSWORD }}
+      - name: Build
         run: |
-          chmod +x ./gradlew
-          ./gradlew :publishToMavenLocal :publishAllPublicationsToBugcordRepository --stacktrace
+          chmod +x gradlew
+          ./gradlew :publishToMavenLocal --stacktrace
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-plugin
-          path: ~/.m2/repository/**
-          if-no-files-found: error
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="$(ls ~/.m2/repository/com/bugcord/gradle/ | head -n1)"
+          test -n "$version"
+
+          files="$(find ~/.m2/repository/com/bugcord -type f \( -name '*.jar' -o -name '*.pom' -o -name '*.module' \) ! -name '*sources*' ! -name '*javadoc*' | tr '\n' ' ')"
+          test -n "$files"
+
+          gh release delete "$version" --cleanup-tag --yes || true
+          gh release create "$version" $files \
+            --title "$version" --notes "Built from $GITHUB_SHA"
