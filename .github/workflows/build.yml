@@ -26,7 +26,8 @@ jobs:
       - name: Build & Publish to Maven Local
         shell: bash
         run: |
-          chmod +x gradlew
+          chmod +x gradlew tools/fetch-deps.sh
+          ./tools/fetch-deps.sh
           ./gradlew --stacktrace :publishToMavenLocal
 
       - name: Upload artifacts

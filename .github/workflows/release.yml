@@ -29,7 +29,8 @@ jobs:
 
       - name: Build
         run: |
-          chmod +x gradlew
+          chmod +x gradlew tools/fetch-deps.sh
+          ./tools/fetch-deps.sh
           ./gradlew :publishToMavenLocal --stacktrace
 
       - name: Publish release
