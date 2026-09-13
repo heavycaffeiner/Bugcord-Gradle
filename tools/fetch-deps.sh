@@ -2,7 +2,7 @@
 # Downloads the prebuilt artifacts this build resolves, into local-repo/.
 set -euo pipefail
 
-HOST="${BUGCORD_ARTIFACT_HOST:-https://github.com/heavycaffeiner}"
+HOST="${BUGCORD_ARTIFACT_HOST:-https://github.com/thirdscam}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 download() {
