@@ -13,9 +13,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task
+package com.bugcord.gradle.task
 
-import com.aliucord.gradle.models.UpdateInfo
+import com.bugcord.gradle.models.UpdateInfo
 import kotlinx.serialization.json.Json
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
@@ -26,7 +26,7 @@ import java.util.zip.CRC32
 
 /**
  * Generates the `updater.json` containing metadata about the most recent build of all plugins.
- * This is used by Aliucord to determine whether there is a compatible plugin update to install.
+ * This is used by Bugcord to determine whether there is a compatible plugin update to install.
  */
 public abstract class GenerateUpdaterJsonTask : DefaultTask() {
     @get:OutputFile
@@ -46,7 +46,7 @@ public abstract class GenerateUpdaterJsonTask : DefaultTask() {
 
             require(plugin.version.get() != "unspecified") {
                 "No project version is set for plugin '${plugin.name.get()}'! " +
-                    "A version is required to deploy an Aliucord plugin."
+                    "A version is required to deploy an Bugcord plugin."
             }
 
             val pluginFile = plugin.buildFile.get().asFile
@@ -69,7 +69,7 @@ public abstract class GenerateUpdaterJsonTask : DefaultTask() {
         outputFile.get().asFile.writeText(Json.encodeToString(map))
     }
 
-    // AliucordPluginExtension's properties are bound to an instance of this class
+    // BugcordPluginExtension's properties are bound to an instance of this class
     // in order to pass it to this task. Passing the extension directly breaks configuration caching.
     public abstract class PluginInfo { // @formatter:off
         @get:Input @get:Optional public abstract val name: Property<String>

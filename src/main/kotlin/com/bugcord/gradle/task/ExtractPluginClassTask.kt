@@ -13,7 +13,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task
+package com.bugcord.gradle.task
 
 import com.googlecode.d2j.node.DexFileNode
 import com.googlecode.d2j.reader.DexFileReader
@@ -24,7 +24,7 @@ import org.gradle.api.tasks.*
 
 /**
  * Parses the compiled dex output from [CompileDexTask] and extracts the class name
- * of a single class that was annotated with `@AliucordPlugin`.
+ * of a single class that was annotated with `@BugcordPlugin`.
  */
 public abstract class ExtractPluginClassTask : DefaultTask() {
     @InputFiles
@@ -52,19 +52,19 @@ public abstract class ExtractPluginClassTask : DefaultTask() {
             .map { reader -> DexFileNode().also { node -> reader.accept(node, readerFlags) } }
             .flatMap { it.clzs }
 
-        // Find all classes annotated with @AliucordPlugin
+        // Find all classes annotated with @BugcordPlugin
         val pluginClasses = classes
-            .filter { cls -> cls.anns?.any { ann -> ann.type == "Lcom/aliucord/annotations/AliucordPlugin;" } == true }
+            .filter { cls -> cls.anns?.any { ann -> ann.type == "Lcom/bugcord/annotations/BugcordPlugin;" } == true }
             .toList()
 
         require(pluginClasses.isNotEmpty()) {
-            "No classes were found annotated with @AliucordPlugin! " +
-                "An Aliucord plugin should have exactly one entrypoint class annotated with @AliucordPlugin."
+            "No classes were found annotated with @BugcordPlugin! " +
+                "An Bugcord plugin should have exactly one entrypoint class annotated with @BugcordPlugin."
         }
         require(pluginClasses.size == 1) {
             """
-                More than one class was found annotated with @AliucordPlugin!
-                An Aliucord plugin should have exactly one entrypoint class annotated with @AliucordPlugin.
+                More than one class was found annotated with @BugcordPlugin!
+                An Bugcord plugin should have exactly one entrypoint class annotated with @BugcordPlugin.
 
                 Found classes: ${pluginClasses.joinToString(separator = " ") { it.className }}
             """.trimIndent()
@@ -73,7 +73,7 @@ public abstract class ExtractPluginClassTask : DefaultTask() {
 
         // Ensure that the class extends `Plugin`
         require(pluginClass.superClass == PLUGIN_CLASS) {
-            "Plugins must extend Aliucord's Plugin class! " +
+            "Plugins must extend Bugcord's Plugin class! " +
                 "Class ${pluginClass.className} was found to be overriding ${pluginClass.superClass}"
         }
 
@@ -96,7 +96,7 @@ public abstract class ExtractPluginClassTask : DefaultTask() {
     }
 
     private companion object {
-        const val PLUGIN_CLASS = "Lcom/aliucord/entities/Plugin;"
-        const val MANIFEST_CLASS = "Lcom/aliucord/entities/Plugin\$Manifest"
+        const val PLUGIN_CLASS = "Lcom/bugcord/entities/Plugin;"
+        const val MANIFEST_CLASS = "Lcom/bugcord/entities/Plugin\$Manifest"
     }
 }

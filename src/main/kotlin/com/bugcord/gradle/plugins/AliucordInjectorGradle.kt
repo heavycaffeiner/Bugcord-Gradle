@@ -13,20 +13,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.plugins
+package com.bugcord.gradle.plugins
 
-import com.aliucord.gradle.Constants
-import com.aliucord.gradle.task.adb.DeployComponentTask
+import com.bugcord.gradle.Constants
+import com.bugcord.gradle.task.adb.DeployComponentTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.register
 
 /**
- * The Gradle plugin used to configure Aliucord's Injector subproject.
- * ID: `com.aliucord.injector`
+ * The Gradle plugin used to configure Bugcord's Injector subproject.
+ * ID: `com.bugcord.injector`
  */
 @Suppress("unused")
-public abstract class AliucordInjectorGradle : AliucordBaseGradle() {
+public abstract class BugcordInjectorGradle : BugcordBaseGradle() {
     override fun apply(target: Project) {
         registerTasks(target)
         registerDex2jarTransformer(target)

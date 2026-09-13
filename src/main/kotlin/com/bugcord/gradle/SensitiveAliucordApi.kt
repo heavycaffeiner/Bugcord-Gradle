@@ -13,13 +13,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle
+package com.bugcord.gradle
 
 /**
- * OptIn annotation for sensitive parts of the Aliucord Gradle Plugin API that
+ * OptIn annotation for sensitive parts of the Bugcord Gradle Plugin API that
  * should not be used under normal circumstances and usage.
  */
 @RequiresOptIn(message = "This API should not be used under normal circumstances. " +
     "Use only if you know the full implications of this API.")
 @Retention(AnnotationRetention.BINARY)
-public annotation class SensitiveAliucordApi
+public annotation class SensitiveBugcordApi

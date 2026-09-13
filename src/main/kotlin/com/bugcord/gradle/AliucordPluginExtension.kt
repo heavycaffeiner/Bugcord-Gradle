@@ -13,9 +13,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle
+package com.bugcord.gradle
 
-import com.aliucord.gradle.models.PluginManifest
+import com.bugcord.gradle.models.PluginManifest
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.provider.ListProperty
@@ -25,29 +25,29 @@ import org.gradle.kotlin.dsl.property
 import javax.inject.Inject
 
 /**
- * Gets the registered Aliucord extension from this project.
- * This is only available when applying the `com.aliucord.plugin` Gradle plugin, for use in Aliucord plugins.
+ * Gets the registered Bugcord extension from this project.
+ * This is only available when applying the `com.bugcord.plugin` Gradle plugin, for use in Bugcord plugins.
  * ```kt
- * project.extensions.getAliucord()
+ * project.extensions.getBugcord()
  * ```
  */
-public fun ExtensionContainer.getAliucord(): AliucordExtension =
-    getByName("aliucord") as AliucordExtension
+public fun ExtensionContainer.getBugcord(): BugcordExtension =
+    getByName("bugcord") as BugcordExtension
 
 /**
- * Attempts to get a registered Aliucord extension from this project.
- * This is only available when applying the `com.aliucord.plugin` Gradle plugin, for use in Aliucord plugins.
+ * Attempts to get a registered Bugcord extension from this project.
+ * This is only available when applying the `com.bugcord.plugin` Gradle plugin, for use in Bugcord plugins.
  * ```kt
- * project.extensions.findAliucord()
+ * project.extensions.findBugcord()
  * ```
  */
-public fun ExtensionContainer.findAliucord(): AliucordExtension? =
-    findByName("aliucord") as AliucordExtension?
+public fun ExtensionContainer.findBugcord(): BugcordExtension? =
+    findByName("bugcord") as BugcordExtension?
 
 /**
- * The interface through which Aliucord plugins are configured through.
+ * The interface through which Bugcord plugins are configured through.
  */
-public abstract class AliucordExtension @Inject constructor(private val project: Project) {
+public abstract class BugcordExtension @Inject constructor(private val project: Project) {
     /**
      * Whether to build and include this project with the other plugins for updating.
      * After publishing, this plugin will by default appear on plugin repositories unless [deployHidden] is set.
@@ -102,7 +102,7 @@ public abstract class AliucordExtension @Inject constructor(private val project:
      *
      * @param name      The user-facing name to display
      * @param id        The Discord ID of the author, optional.
-     *                  This also will allow Aliucord to show a badge on your profile if the plugin is installed.
+     *                  This also will allow Bugcord to show a badge on your profile if the plugin is installed.
      * @param hyperlink Whether to hyperlink the Discord profile specified by [id].
      *                  Set this to false if you don't want to be spammed for support.
      */
@@ -118,7 +118,7 @@ public abstract class AliucordExtension @Inject constructor(private val project:
      * Otherwise, if [updateUrl] and [buildUrl] both have not been set yet,
      * they will be generated based on the supplied url.
      *
-     * @param repoUrl A repository url such as `https://github.com/Aliucord/plugins-template`, in this exact format.
+     * @param repoUrl A repository url such as `https://github.com/Bugcord/plugins-template`, in this exact format.
      *                Using GitHub to distribute releases is required.
      */
     public fun github(repoUrl: String) {

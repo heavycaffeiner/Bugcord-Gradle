@@ -13,14 +13,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.models
+package com.bugcord.gradle.models
 
 import kotlinx.serialization.Serializable
 
 /**
  * The manifest embedded into a plugin zip containing info about the plugin,
  * as well as the dependencies that were used to build it. These are used
- * to determine whether the plugin may be safely loaded by Aliucord.
+ * to determine whether the plugin may be safely loaded by Bugcord.
  */
 @Serializable
 internal data class PluginManifest(

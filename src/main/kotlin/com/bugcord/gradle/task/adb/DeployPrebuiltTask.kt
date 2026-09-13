@@ -13,7 +13,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task.adb
+package com.bugcord.gradle.task.adb
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
@@ -24,15 +24,15 @@ import java.io.File
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-private const val REMOTE_ALIUCORD_DIR = "/storage/emulated/0/Aliucord"
+private const val REMOTE_BUGCORD_DIR = "/storage/emulated/0/Bugcord"
 
 /**
- * Pushes either an Aliucord core or an Aliucord plugin to the device.
+ * Pushes either an Bugcord core or an Bugcord plugin to the device.
  *
- * - When deploying plugins, the plugin is pushed to `/storage/emulated/0/Aliucord/plugins`, corresponding to the
- * primary Android user's external storage. The plugin is then forcefully enabled by changing Aliucord's settings.
- * - When deploying Aliucord Core, the bundle is pushed to `/storage/emulated/0/Aliucord/Aliucord.zip`, similarly to
- * when pushing plugins. Aliucord's settings are then changed to force enable using the local core bundle.
+ * - When deploying plugins, the plugin is pushed to `/storage/emulated/0/Bugcord/plugins`, corresponding to the
+ * primary Android user's external storage. The plugin is then forcefully enabled by changing Bugcord's settings.
+ * - When deploying Bugcord Core, the bundle is pushed to `/storage/emulated/0/Bugcord/Bugcord.zip`, similarly to
+ * when pushing plugins. Bugcord's settings are then changed to force enable using the local core bundle.
  */
 @DisableCachingByDefault
 public abstract class DeployPrebuiltTask : AdbTask() {
@@ -49,7 +49,7 @@ public abstract class DeployPrebuiltTask : AdbTask() {
 
     @TaskAction
     public fun deploy() {
-        createAliucordDirs()
+        createBugcordDirs()
 
         when (deployType) {
             DeployType.Core -> deployCore(deployFile.get().asFile)
@@ -58,20 +58,20 @@ public abstract class DeployPrebuiltTask : AdbTask() {
     }
 
     private fun deployCore(file: File) {
-        runAdbCommand("push", file.absolutePath, "$REMOTE_ALIUCORD_DIR/Aliucord.zip")
-        editAliucordSettings {
+        runAdbCommand("push", file.absolutePath, "$REMOTE_BUGCORD_DIR/Bugcord.zip")
+        editBugcordSettings {
             set(
                 JsonPrimitive("AC_from_storage"),
                 JsonPrimitive(true),
             )
         }
 
-        logger.lifecycle("Deployed Aliucord core to configured devices")
+        logger.lifecycle("Deployed Bugcord core to configured devices")
     }
 
     private fun deployPlugin(file: File) {
-        runAdbCommand("push", file.absolutePath, "$REMOTE_ALIUCORD_DIR/plugins/${file.name}")
-        editAliucordSettings {
+        runAdbCommand("push", file.absolutePath, "$REMOTE_BUGCORD_DIR/plugins/${file.name}")
+        editBugcordSettings {
             set(
                 JsonPrimitive("AC_PM_${file.nameWithoutExtension}"),
                 JsonPrimitive(true),
@@ -82,40 +82,40 @@ public abstract class DeployPrebuiltTask : AdbTask() {
     }
 
     /**
-     * Creates the Aliucord directory on the device along with all the subfolders (plugins, themes, settings).
+     * Creates the Bugcord directory on the device along with all the subfolders (plugins, themes, settings).
      */
-    protected fun createAliucordDirs() {
+    protected fun createBugcordDirs() {
         runAdbShell(
             "mkdir",
             "-v", // Verbose
             "-p", // Create all parents
-            "'$REMOTE_ALIUCORD_DIR/plugins'",
-            "'$REMOTE_ALIUCORD_DIR/themes'",
-            "'$REMOTE_ALIUCORD_DIR/settings'",
+            "'$REMOTE_BUGCORD_DIR/plugins'",
+            "'$REMOTE_BUGCORD_DIR/themes'",
+            "'$REMOTE_BUGCORD_DIR/settings'",
         )
     }
 
     /**
-     * Reads Aliucord core's settings from the device, then applies [block] to it,
+     * Reads Bugcord core's settings from the device, then applies [block] to it,
      * and writes it back to the device.
      */
     @OptIn(ExperimentalSerializationApi::class)
-    protected fun editAliucordSettings(block: (MutableMap<JsonPrimitive, JsonElement>).() -> Unit) {
+    protected fun editBugcordSettings(block: (MutableMap<JsonPrimitive, JsonElement>).() -> Unit) {
         val localSettingsFile = temporaryDir.resolve("settings.json")
-        val remoteSettingsPath = "$REMOTE_ALIUCORD_DIR/settings/Aliucord.json"
+        val remoteSettingsPath = "$REMOTE_BUGCORD_DIR/settings/Bugcord.json"
 
-        aliucordSettingsLock.withLock {
+        bugcordSettingsLock.withLock {
             try {
                 runAdbCommand("pull", remoteSettingsPath, localSettingsFile.absolutePath)
             } catch (e: AdbException) {
-                logger.info("Failed to pull Aliucord settings", e)
+                logger.info("Failed to pull Bugcord settings", e)
             }
 
             val settings = try {
                 Json.decodeFromStream<MutableMap<JsonPrimitive, JsonElement>>(
                     stream = localSettingsFile.inputStream())
             } catch (e: Exception) {
-                logger.info("Failed to parse Aliucord settings", e)
+                logger.info("Failed to parse Bugcord settings", e)
                 mutableMapOf()
             }
 
@@ -132,8 +132,8 @@ public abstract class DeployPrebuiltTask : AdbTask() {
 
     private companion object {
         /**
-         * Lock access to the device's `Aliucord.json` settings file to prevent race conditions.
+         * Lock access to the device's `Bugcord.json` settings file to prevent race conditions.
          */
-        val aliucordSettingsLock = ReentrantLock(/* fair = */ false)
+        val bugcordSettingsLock = ReentrantLock(/* fair = */ false)
     }
 }

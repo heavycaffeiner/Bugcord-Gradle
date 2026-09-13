@@ -13,15 +13,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle
+package com.bugcord.gradle
 
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.kotlin.dsl.getByName
 
 internal object Constants {
-    const val TASK_GROUP = "aliucord"
-    const val TASK_GROUP_INTERNAL = "aliucord-internal"
+    const val TASK_GROUP = "bugcord"
+    const val TASK_GROUP_INTERNAL = "bugcord-internal"
 }
 
 /**

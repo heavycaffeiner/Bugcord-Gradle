@@ -11,10 +11,8 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         google()
-        maven {
-            name = "aliucord"
-            url = uri("https://maven.aliucord.com/releases")
-        }
+        // Holds the dex2jar build the APK to jar transform relies on.
+        mavenLocal()
     }
 }
 

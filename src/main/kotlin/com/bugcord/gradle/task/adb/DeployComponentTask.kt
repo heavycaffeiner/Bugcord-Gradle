@@ -13,18 +13,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task.adb
+package com.bugcord.gradle.task.adb
 
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.*
 import org.gradle.work.DisableCachingByDefault
 
 /**
- * Pushes a custom component build to a device(s) with Aliucord Manager installed.
+ * Pushes a custom component build to a device(s) with Bugcord Manager installed.
  *
- * For example, when deploying Aliucord Injector, the dex is pushed to `/data/local/tmp/aliucord`,
- * an intent is launched, starting Aliucord Manager to import the component to its internal storage.
- * Aliucord Manager then prompts to start a new installation of Aliucord.
+ * For example, when deploying Bugcord Injector, the dex is pushed to `/data/local/tmp/bugcord`,
+ * an intent is launched, starting Bugcord Manager to import the component to its internal storage.
+ * Bugcord Manager then prompts to start a new installation of Bugcord.
  */
 @DisableCachingByDefault
 public abstract class DeployComponentTask : AdbTask() {
@@ -47,13 +47,13 @@ public abstract class DeployComponentTask : AdbTask() {
         runAdbCommand("push", componentFile.absolutePath, remoteComponentPath)
         runAdbShell(
             "am", "start",
-            "-n", "com.aliucord.manager/.MainActivity",
-            "-a", "com.aliucord.manager.IMPORT_COMPONENT",
-            "--es", "aliucord.file", "'$remoteComponentName'",
-            "--es", "aliucord.componentType", "'$componentType'",
+            "-n", "com.bugcord.manager/.MainActivity",
+            "-a", "com.bugcord.manager.IMPORT_COMPONENT",
+            "--es", "bugcord.file", "'$remoteComponentName'",
+            "--es", "bugcord.componentType", "'$componentType'",
         )
 
-        // Wait a bit to let Aliucord Manager import the component
+        // Wait a bit to let Bugcord Manager import the component
         Thread.sleep(2000)
 
         runAdbShell("rm", "-rf", "'$remoteComponentPath'")

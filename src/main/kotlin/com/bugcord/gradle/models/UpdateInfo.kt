@@ -13,13 +13,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.models
+package com.bugcord.gradle.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * A single item of the updater manifest that is consumed by Aliucord to determine whether
+ * A single item of the updater manifest that is consumed by Bugcord to determine whether
  * a compatible update for a plugin exists to be installed.
  */
 @Serializable

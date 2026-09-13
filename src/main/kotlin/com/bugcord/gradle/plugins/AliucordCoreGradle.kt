@@ -13,23 +13,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.plugins
+package com.bugcord.gradle.plugins
 
-import com.aliucord.gradle.Constants
-import com.aliucord.gradle.task.AlignTask
-import com.aliucord.gradle.task.adb.DeployPrebuiltTask
-import com.aliucord.gradle.task.adb.RestartAliucordTask
+import com.bugcord.gradle.Constants
+import com.bugcord.gradle.task.AlignTask
+import com.bugcord.gradle.task.adb.DeployPrebuiltTask
+import com.bugcord.gradle.task.adb.RestartBugcordTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.api.tasks.bundling.ZipEntryCompression
 import org.gradle.kotlin.dsl.register
 
 /**
- * The Gradle plugin used to build Aliucord's core subproject.
- * ID: `com.aliucord.core`
+ * The Gradle plugin used to build Bugcord's core subproject.
+ * ID: `com.bugcord.core`
  */
 @Suppress("unused")
-public abstract class AliucordCoreGradle : AliucordBaseGradle() {
+public abstract class BugcordCoreGradle : BugcordBaseGradle() {
     override fun apply(target: Project) {
         registerTasks(target)
         registerDex2jarTransformer(target)
@@ -72,12 +72,12 @@ public abstract class AliucordCoreGradle : AliucordBaseGradle() {
             outputZip.set(project.layout.buildDirectory.file("outputs/${project.name}.zip"))
 
             doLast {
-                logger.lifecycle("Built Aliucord core at ${outputs.files.singleFile}")
+                logger.lifecycle("Built Bugcord core at ${outputs.files.singleFile}")
             }
         }
 
         // Deployment
-        val restartAliucordTask = project.tasks.register<RestartAliucordTask>("restartAliucord") {
+        val restartBugcordTask = project.tasks.register<RestartBugcordTask>("restartBugcord") {
             group = Constants.TASK_GROUP
         }
 
@@ -85,7 +85,7 @@ public abstract class AliucordCoreGradle : AliucordBaseGradle() {
             group = Constants.TASK_GROUP
             deployType = DeployPrebuiltTask.DeployType.Core
             deployFile.fileProvider(makeTask.map { it.outputs.files.singleFile })
-            finalizedBy(restartAliucordTask)
+            finalizedBy(restartBugcordTask)
         }
     }
 }

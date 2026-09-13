@@ -13,9 +13,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task
+package com.bugcord.gradle.task
 
-import com.aliucord.gradle.getAndroid
+import com.bugcord.gradle.getAndroid
 import com.android.build.gradle.internal.SdkComponentsBuildService
 import com.android.build.gradle.internal.services.getBuildService
 import com.android.sdklib.BuildToolInfo

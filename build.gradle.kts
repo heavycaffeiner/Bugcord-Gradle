@@ -25,17 +25,17 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("aliucord-plugin") {
-            id = "com.aliucord.plugin"
-            implementationClass = "com.aliucord.gradle.plugins.AliucordPluginGradle"
+        create("bugcord-plugin") {
+            id = "com.bugcord.plugin"
+            implementationClass = "com.bugcord.gradle.plugins.BugcordPluginGradle"
         }
-        create("aliucord-core") {
-            id = "com.aliucord.core"
-            implementationClass = "com.aliucord.gradle.plugins.AliucordCoreGradle"
+        create("bugcord-core") {
+            id = "com.bugcord.core"
+            implementationClass = "com.bugcord.gradle.plugins.BugcordCoreGradle"
         }
-        create("aliucord-injector") {
-            id = "com.aliucord.injector"
-            implementationClass = "com.aliucord.gradle.plugins.AliucordInjectorGradle"
+        create("bugcord-injector") {
+            id = "com.bugcord.injector"
+            implementationClass = "com.bugcord.gradle.plugins.BugcordInjectorGradle"
         }
     }
 }
@@ -43,27 +43,6 @@ gradlePlugin {
 version = "2.3.2"
 
 mavenPublishing {
-    coordinates("com.aliucord", "gradle")
+    coordinates("com.bugcord", "gradle")
     configureBasedOnAppliedPlugins()
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "aliucord"
-            url = uri("https://maven.aliucord.com/releases")
-            credentials {
-                username = System.getenv("MAVEN_RELEASES_USERNAME")
-                password = System.getenv("MAVEN_RELEASES_PASSWORD")
-            }
-        }
-        maven {
-            name = "aliucordSnapshots"
-            url = uri("https://maven.aliucord.com/snapshots")
-            credentials {
-                username = System.getenv("MAVEN_SNAPSHOTS_USERNAME")
-                password = System.getenv("MAVEN_SNAPSHOTS_PASSWORD")
-            }
-        }
-    }
 }

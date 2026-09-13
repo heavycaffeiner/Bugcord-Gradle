@@ -13,7 +13,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task.adb
+package com.bugcord.gradle.task.adb
 
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -21,10 +21,10 @@ import org.gradle.api.tasks.options.Option
 import org.gradle.work.DisableCachingByDefault
 
 /**
- * Force (re)starts the main Aliucord activity on configured devices.
+ * Force (re)starts the main Bugcord activity on configured devices.
  */
 @DisableCachingByDefault
-public abstract class RestartAliucordTask : AdbTask() {
+public abstract class RestartBugcordTask : AdbTask() {
     @get:Input
     @set:Option(
         option = "wait-for-debugger",
@@ -41,13 +41,13 @@ public abstract class RestartAliucordTask : AdbTask() {
         val args = arrayListOf(
             "start",
             "-S", // Force restart app
-            "-n", $$"'com.aliucord/com.discord.app.AppActivity$Main'",
+            "-n", $$"'com.bugcord/com.discord.app.AppActivity$Main'",
         )
         if (this.waitForDebugger)
             args += "-D"
 
         this.runAdbShell("am", *args.toTypedArray())
 
-        logger.lifecycle("Restarted Aliucord on configured devices")
+        logger.lifecycle("Restarted Bugcord on configured devices")
     }
 }

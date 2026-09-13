@@ -13,13 +13,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.plugins
+package com.bugcord.gradle.plugins
 
-import com.aliucord.gradle.*
-import com.aliucord.gradle.models.PluginManifest
-import com.aliucord.gradle.task.*
-import com.aliucord.gradle.task.adb.DeployPrebuiltTask
-import com.aliucord.gradle.task.adb.RestartAliucordTask
+import com.bugcord.gradle.*
+import com.bugcord.gradle.models.PluginManifest
+import com.bugcord.gradle.task.*
+import com.bugcord.gradle.task.adb.DeployPrebuiltTask
+import com.bugcord.gradle.task.adb.RestartBugcordTask
 import kotlinx.serialization.json.Json
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -28,16 +28,16 @@ import org.gradle.api.tasks.bundling.ZipEntryCompression
 import org.gradle.kotlin.dsl.*
 
 /**
- * The Gradle plugin used to build Aliucord plugins.
- * ID: `com.aliucord.plugin`
+ * The Gradle plugin used to build Bugcord plugins.
+ * ID: `com.bugcord.plugin`
  */
 @Suppress("unused")
-public abstract class AliucordPluginGradle : AliucordBaseGradle() {
+public abstract class BugcordPluginGradle : BugcordBaseGradle() {
     override fun apply(target: Project) {
         if (target == target.rootProject) {
             registerRootTasks(target)
         } else {
-            target.extensions.create<AliucordExtension>("aliucord")
+            target.extensions.create<BugcordExtension>("bugcord")
             registerTasks(target)
             registerDex2jarTransformer(target)
 
@@ -58,27 +58,27 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
     protected fun registerRootTasks(rootProject: Project) {
         rootProject.tasks.register<GenerateUpdaterJsonTask>("generateUpdaterJson") {
             val plugins = rootProject.allprojects
-                .filter { it.extensions.findAliucord() != null }
+                .filter { it.extensions.findBugcord() != null }
                 .map { project ->
-                    val aliucord = project.extensions.getAliucord()
+                    val bugcord = project.extensions.getBugcord()
                     val android = project.extensions.getAndroid()
 
                     // Retrieve various dependency versions that this plugin is built with
                     val discordDependencyVersion = getDiscordDependencyVersion(project, warn = false)
                     val kotlinDependencyVersion = getKotlinDependencyVersion(project, warn = false)
-                    val aliucordDependencyVersion = getAliucordDependencyVersion(project, warn = false)
+                    val bugcordDependencyVersion = getBugcordDependencyVersion(project, warn = false)
 
                     project.objects.newInstance<GenerateUpdaterJsonTask.PluginInfo>().apply {
                         name.set(project.provider { project.name })
                         version.set(project.provider { project.version.toString() })
-                        deploy.set(aliucord.deploy)
-                        deployHidden.set(aliucord.deployHidden)
-                        changelog.set(aliucord.changelog)
-                        changelogMedia.set(aliucord.changelogMedia)
-                        buildUrl.set(aliucord.buildUrl)
-                        minimumDiscordVersion.set(aliucord.minimumDiscordVersion
+                        deploy.set(bugcord.deploy)
+                        deployHidden.set(bugcord.deployHidden)
+                        changelog.set(bugcord.changelog)
+                        changelogMedia.set(bugcord.changelogMedia)
+                        buildUrl.set(bugcord.buildUrl)
+                        minimumDiscordVersion.set(bugcord.minimumDiscordVersion
                             .orElse(project.provider { discordDependencyVersion }))
-                        minimumAliucordVersion.set(aliucordDependencyVersion)
+                        minimumAliucordVersion.set(bugcordDependencyVersion)
                         minimumKotlinVersion.set(kotlinDependencyVersion)
                         // If this is null, an earlier task will fail
                         minimumApiLevel.set(android.defaultConfig.minSdkVersion?.apiLevel)
@@ -94,7 +94,7 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
     }
 
     protected fun registerTasks(project: Project) {
-        val extension = project.extensions.getAliucord()
+        val extension = project.extensions.getBugcord()
         val intermediates = project.layout.buildDirectory.dir("intermediates")
 
         // Compilation
@@ -136,14 +136,14 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
             }
             dependsOn(pluginClassNameFile)
 
-            val aliucord = project.extensions.getAliucord()
+            val bugcord = project.extensions.getBugcord()
             val android = project.extensions.getAndroid()
 
             // Retrieve various dependency versions that this plugin is built with
             val discordDependencyVersion = getDiscordDependencyVersion(project, warn = true)
             val kotlinDependencyVersion = getKotlinDependencyVersion(project, warn = true)
-            val aliucordDependencyVersion = getAliucordDependencyVersion(project, warn = true)
-            val minimumDiscordVersion = aliucord.minimumDiscordVersion
+            val bugcordDependencyVersion = getBugcordDependencyVersion(project, warn = true)
+            val minimumDiscordVersion = bugcord.minimumDiscordVersion
                 .orElse(project.provider { discordDependencyVersion })
 
             // Write manifest to be zipped
@@ -160,7 +160,7 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
                 updateUrl = extension.updateUrl.orNull,
                 changelog = extension.changelog.orNull,
                 changelogMedia = extension.changelogMedia.orNull,
-                minimumAliucordVersion = aliucordDependencyVersion,
+                minimumAliucordVersion = bugcordDependencyVersion,
                 minimumKotlinVersion = kotlinDependencyVersion,
                 minimumApiLevel = android.defaultConfig.minSdkVersion?.apiLevel,
             )
@@ -184,7 +184,7 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
         }
 
         // Deployment
-        val restartAliucordTask = project.tasks.register<RestartAliucordTask>("restartAliucord") {
+        val restartBugcordTask = project.tasks.register<RestartBugcordTask>("restartBugcord") {
             group = Constants.TASK_GROUP
         }
 
@@ -192,7 +192,7 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
             group = Constants.TASK_GROUP
             deployType = DeployPrebuiltTask.DeployType.Plugin
             deployFile.fileProvider(makeTask.map { it.outputs.files.single() })
-            finalizedBy(restartAliucordTask)
+            finalizedBy(restartBugcordTask)
         }
     }
 
@@ -223,14 +223,14 @@ public abstract class AliucordPluginGradle : AliucordBaseGradle() {
         return version?.takeIf { it.matches(semVerRegex) }
     }
 
-    private fun getAliucordDependencyVersion(project: Project, warn: Boolean = true): String? {
+    private fun getBugcordDependencyVersion(project: Project, warn: Boolean = true): String? {
         val compileOnlyConfiguration = project.configurations.getByName("compileOnly")
         val version = compileOnlyConfiguration.dependencies
-            .find { it.group == "com.aliucord" && it.name == "Aliucord" }
+            .find { it.group == "com.bugcord" && it.name == "Bugcord" }
             ?.version
 
         if (warn && version == "main-SNAPSHOT") {
-            project.logger.warn("Using 'main-SNAPSHOT' as a version for com.aliucord:Aliucord is discouraged! " +
+            project.logger.warn("Using 'main-SNAPSHOT' as a version for com.bugcord:Bugcord is discouraged! " +
                 "Please strictly specify the core version you want to target at a minimum.")
         }
 

@@ -13,13 +13,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.transformers
+package com.bugcord.gradle.transformers
 
 import com.googlecode.d2j.dex.Dex2jar
 import com.googlecode.d2j.reader.MultiDexFileReader
 import org.gradle.api.artifacts.transform.*
 import org.gradle.api.file.FileSystemLocation
 import org.gradle.api.provider.Provider
+import org.objectweb.asm.AnnotationVisitor
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.Opcodes
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 
 /**
  * Artifact transformer to convert `apk` artifact types into `jar` types using Dex2Jar.

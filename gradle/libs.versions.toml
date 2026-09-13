@@ -13,8 +13,8 @@ android-repository = { module = "com.android.tools:repository", version.ref = "a
 android-sdk = { module = "com.android.tools:sdk-common", version.ref = "android-tools" }
 android-sdklib = { module = "com.android.tools:sdklib", version.ref = "android-tools" }
 dex2jar = { module = "com.aliucord.d2j:dex-translator", version.ref = "dex2jar" }
-jadx-core = { module = "com.aliucord.jadx:jadx-core", version.ref = "jadx" }
-jadx-dexInput = { module = "com.aliucord.jadx:jadx-dex-input", version.ref = "jadx" }
+jadx-core = { module = "io.github.skylot:jadx-core", version.ref = "jadx" }
+jadx-dexInput = { module = "io.github.skylot:jadx-dex-input", version.ref = "jadx" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 [plugins]

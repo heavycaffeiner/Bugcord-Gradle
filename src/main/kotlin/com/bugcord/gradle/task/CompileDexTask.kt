@@ -13,10 +13,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task
+package com.bugcord.gradle.task
 
-import com.aliucord.gradle.SensitiveAliucordApi
-import com.aliucord.gradle.getAndroid
+import com.bugcord.gradle.SensitiveBugcordApi
+import com.bugcord.gradle.getAndroid
 import com.android.build.gradle.internal.errors.MessageReceiverImpl
 import com.android.build.gradle.options.SyncOptions.ErrorFormatMode
 import com.android.builder.dexing.*
@@ -57,7 +57,7 @@ public abstract class CompileDexTask : DefaultTask() {
      * under normal circumstances. (Kotlin stdlib, appcompat libraries, etc.)
      */
     @get:Input
-    @set:SensitiveAliucordApi
+    @set:SensitiveBugcordApi
     public var scanDependencies: Boolean = true
 
     private val minSdkVersion: Int
@@ -81,7 +81,7 @@ public abstract class CompileDexTask : DefaultTask() {
             if (illegalDependency != null) {
                 throw GradleException("${illegalDependency.name} is defined as an 'implementation' dependency! " +
                     "It should be explicitly defined as a 'compileOnly' dependency! " +
-                    "Please read the Aliucord Gradle plugin v2 migration guide!")
+                    "Please read the Bugcord Gradle plugin v2 migration guide!")
             }
         }
 

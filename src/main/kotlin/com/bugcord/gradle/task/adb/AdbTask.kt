@@ -13,9 +13,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.task.adb
+package com.bugcord.gradle.task.adb
 
-import com.aliucord.gradle.getAndroid
+import com.bugcord.gradle.getAndroid
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.*

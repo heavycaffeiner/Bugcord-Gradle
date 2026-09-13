@@ -13,13 +13,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aliucord.gradle.plugins
+package com.bugcord.gradle.plugins
 
-import com.aliucord.gradle.Constants
-import com.aliucord.gradle.getAndroid
-import com.aliucord.gradle.task.CompileDexTask
-import com.aliucord.gradle.task.CompileResourcesTask
-import com.aliucord.gradle.transformers.Dex2JarTransform
+import com.bugcord.gradle.Constants
+import com.bugcord.gradle.getAndroid
+import com.bugcord.gradle.task.CompileDexTask
+import com.bugcord.gradle.task.CompileResourcesTask
+import com.bugcord.gradle.transformers.Dex2JarTransform
 import com.android.build.api.attributes.BuildTypeAttr
 import com.android.build.gradle.tasks.ProcessLibraryManifest
 import org.gradle.api.*
@@ -29,17 +29,17 @@ import org.gradle.kotlin.dsl.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * A base class for [AliucordCoreGradle], [AliucordInjectorGradle], and [AliucordPluginGradle]
+ * A base class for [BugcordCoreGradle], [BugcordInjectorGradle], and [BugcordPluginGradle]
  * containing shared project registration code.
  */
-public abstract class AliucordBaseGradle : Plugin<Project> {
+public abstract class BugcordBaseGradle : Plugin<Project> {
     private companion object {
         var legacyCacheDeleted = AtomicBoolean(false)
     }
 
     /**
      * Deletes the old Discord cache that lived under
-     * `~/.gradle/caches/aliucord/discord/discord-{version}.{apk,jar}`
+     * `~/.gradle/caches/bugcord/discord/discord-{version}.{apk,jar}`
      * which was used by this Gradle plugin prior to v2. These files are not
      * tracked by Gradle's cache garbage collector so we have to handle it manually.
      */
@@ -47,7 +47,7 @@ public abstract class AliucordBaseGradle : Plugin<Project> {
         if (legacyCacheDeleted.getAndSet(true)) return
 
         project.gradle.gradleUserHomeDir
-            .resolve("caches/aliucord")
+            .resolve("caches/bugcord")
             .deleteRecursively()
     }
 
